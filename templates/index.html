@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Волшебный генератор сказок 🌟</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', cursive;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe, #00f2fe, #a8edea, #fed6e3, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 60% 70%, rgba(240, 147, 251, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Загадочные плавающие частицы */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                radial-gradient(circle, rgba(102, 126, 234, 0.2) 1px, transparent 1px),
+                radial-gradient(circle, rgba(240, 147, 251, 0.2) 1px, transparent 1px),
+                radial-gradient(circle, rgba(79, 172, 254, 0.2) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px, 200px 200px;
+            background-position: 0 0, 50px 50px, 100px 100px;
+            animation: particles 30s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        @keyframes particles {
+            from {
+                background-position: 0 0, 50px 50px, 100px 100px;
+            }
+            to {
+                background-position: 100px 100px, 150px 150px, 200px 200px;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.2), 
+                0 0 100px rgba(255, 255, 255, 0.1),
+                inset 0 0 60px rgba(102, 126, 234, 0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe);
+            background-size: 300% 300%;
+            border-radius: 32px;
+            z-index: -1;
+            animation: borderGlow 8s ease infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .left-column {
+            padding-right: 20px;
+            border-right: 3px solid #ffeaa7;
+        }
+
+        .right-column {
+            padding-left: 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            position: relative;
+            overflow: visible;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .results-header[style*="display: none"] {
+            display: none !important;
+        }
+
+        .results-header h2 {
+            font-size: 1.5rem;
+            color: #d63031;
+            margin-bottom: 10px;
+        }
+
+        .results-header p {
+            font-size: 1rem;
+            color: #636e72;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: none;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #5a67d8;
+            font-weight: 500;
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.3rem;
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .big-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            border: 3px solid #fdcb6e;
+            border-radius: 15px;
+            background: white;
+            font-family: 'Fredoka', cursive;
+            transition: all 0.3s ease;
+        }
+
+        .big-input:focus {
+            outline: none;
+            border-color: #ff7675;
+            box-shadow: 0 0 10px rgba(255, 118, 117, 0.3);
+            transform: scale(1.02);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-button {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Fredoka', cursive;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .file-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #636e72;
+            text-align: center;
+        }
+
+        .image-preview {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 3px solid #fdcb6e;
+        }
+
+        .image-preview p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #636e72;
+            font-weight: 500;
+        }
+
+        .generate-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Fredoka', cursive;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .generate-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Модальное окно для увеличения изображений */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #bbb;
+        }
+
+        .story-part img {
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        .story-part img:hover {
+            transform: scale(1.02);
+        }
+
+        .story-result {
+            display: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(254, 207, 239, 0.3));
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            min-height: 200px;
+            width: 100%;
+            z-index: 100;
+            position: relative;
+        }
+
+        .story-result::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #667eea, #f093fb, #4facfe, #00f2fe, #a8edea);
+            background-size: 400% 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: storyGlow 10s ease infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes storyGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 50%;
+            }
+            50% {
+                background-position: 50% 100%;
+            }
+            75% {
+                background-position: 50% 0%;
+            }
+        }
+
+        .story-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #e17055;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .story-parts {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .story-part {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff, #fef5fb);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .story-part:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .story-part::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.05), 
+                rgba(240, 147, 251, 0.05), 
+                rgba(79, 172, 254, 0.05));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .story-part:hover::before {
+            opacity: 1;
+        }
+
+        .story-part img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-right: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .story-text {
+            flex: 1;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #2d3436;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.3rem;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+
+        .error-message {
+            display: none;
+            background: #ffeaa7;
+            border: 2px solid #fdcb6e;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error-message p {
+            color: #d63031;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .left-column {
+                border-right: none;
+                border-bottom: 3px solid #ffeaa7;
+                padding-right: 0;
+                padding-bottom: 30px;
+            }
+
+            .right-column {
+                padding-left: 0;
+                padding-top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .left-column {
+                padding-bottom: 20px;
+            }
+
+            .right-column {
+                padding-top: 20px;
+            }
+
+            .story-part {
+                flex-direction: column;
+            }
+
+            .story-part img, .image-placeholder {
+                width: 100% !important;
+                height: 200px;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .image-preview img {
+                max-width: 150px !important;
+                max-height: 150px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Левая колонка - форма ввода -->
+        <div class="left-column">
+            <div class="header">
+                <h1>🌟 Волшебный генератор сказок 🌟</h1>
+                <p>Загрузи картинку и получи сказку с красивыми иллюстрациями!</p>
+            </div>
+
+            <form id="storyForm" class="form-section">
+            <div class="form-group">
+                <label for="age_range">🎂 Возраст ребёнка:</label>
+                <select id="age_range" name="age_range" class="big-input">
+                    <option value="3-5">3-5 лет</option>
+                    <option value="2-4">2-4 года</option>
+                    <option value="4-6">4-6 лет</option>
+                    <option value="5-7">5-7 лет</option>
+                    <option value="6-8">6-8 лет</option>
+                    <option value="7-9">7-9 лет</option>
+                    <option value="8-10">8-10 лет</option>
+                    <option value="9-12">9-12 лет</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="image">📸 Загрузи изображение:</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="image" name="image" accept="image/*" class="file-input">
+                    <button type="button" class="file-button" onclick="document.getElementById('image').click()">
+                        🖼️ Выбрать картинку
+                    </button>
+                    <div class="file-name" id="fileName">Файл не выбран</div>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="" alt="Превью изображения">
+                        <p id="previewText">Ваше изображение готово к созданию сказки!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="extra_prompt">💭 Дополнительные пожелания (необязательно):</label>
+                <textarea id="extra_prompt" name="extra_prompt" class="big-input" rows="3" placeholder="Например: про волшебных животных, в лесу, с друзьями..."></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    ✨ Создать волшебную сказку! ✨
+                </button>
+            </div>
+            </form>
+        </div>
+
+        <!-- Правая колонка - результаты -->
+        <div class="right-column">
+            <div class="results-header">
+                <h2>📚 Ваша сказка появится здесь</h2>
+                <p>Загрузите изображение и нажмите кнопку создания!</p>
+            </div>
+
+            <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Создаём сказку и рисуем картинки... Это займёт немного времени!</div>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <p id="errorText"></p>
+        </div>
+
+            <div class="story-result" id="storyResult">
+                <h2 class="story-title" id="storyTitle"></h2>
+                <div class="story-parts" id="storyParts"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для увеличения изображений -->
+    <div id="imageModal" class="image-modal" onclick="closeModal()">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileName = document.getElementById('fileName');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+
+            if (file) {
+                // Проверяем размер файла (16MB макс)
+                const maxSize = 16 * 1024 * 1024; // 16MB
+                if (file.size > maxSize) {
+                    alert('Файл слишком большой! Максимальный размер: 16MB');
+                    this.value = '';
+                    fileName.textContent = 'Файл не выбран';
+                    imagePreview.style.display = 'none';
+                    return;
+                }
+
+                // Проверяем, что это изображение поддерживаемого типа
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (allowedTypes.includes(file.type)) {
+                    fileName.textContent = '📁 ' + file.name + ' (' + formatFileSize(file.size) + ')';
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Если файл не поддерживаемого типа
+                    imagePreview.style.display = 'none';
+                    alert('Пожалуйста, выберите файл изображения: JPEG, PNG, GIF или WebP');
+                    this.value = '';
+                    fileName.textContent = 'Файл не выбран';
+                }
+            } else {
+                fileName.textContent = 'Файл не выбран';
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        document.getElementById('storyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('📝 Форма отправлена');
+
+            const formData = new FormData(this);
+            const generateBtn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const storyResult = document.getElementById('storyResult');
+
+            // Проверяем, выбран ли файл
+            if (!document.getElementById('image').files[0]) {
+                showError('Пожалуйста, выберите изображение!');
+                return;
+            }
+
+            // Скрываем результаты и ошибки
+            storyResult.style.display = 'none';
+            errorMessage.style.display = 'none';
+            document.querySelector('.results-header').style.display = 'none';
+
+            // Показываем загрузку
+            loading.style.display = 'block';
+            loading.style.visibility = 'visible';
+            generateBtn.disabled = true;
+            generateBtn.textContent = '📖 Пишу сказку...';
+
+            // Меняем текст загрузки через время
+            setTimeout(() => {
+                if (loading.style.display !== 'none') {
+                    document.querySelector('.loading-text').textContent = '🎨 Рисую иллюстрации... Это может занять время!';
+                }
+            }, 3000);
+
+            try {
+                const url = window.location.origin + '/generate';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseText = await response.text();
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Ошибка парсинга ответа:', parseError);
+                    throw new Error('Сервер вернул некорректный ответ');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Произошла ошибка');
+                }
+
+                // Показываем результат
+                displayStory(data);
+
+            } catch (error) {
+                console.error('❌ Ошибка в обработке:', error);
+                showError(error.message);
+                // Скрываем загрузку только при ошибке
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+                generateBtn.textContent = '✨ Создать волшебную сказку! ✨';
+            }
+        });
+
+        function displayStory(data) {
+            const storyResult = document.getElementById('storyResult');
+            const storyTitle = document.getElementById('storyTitle');
+            const storyParts = document.getElementById('storyParts');
+
+            if (!storyResult || !storyTitle || !storyParts) {
+                console.error('Ошибка: не найдены элементы для отображения сказки');
+                return;
+            }
+
+            if (!data.title || !data.parts || !Array.isArray(data.parts)) {
+                console.error('Ошибка: неверная структура данных');
+                throw new Error('Сервер вернул данные в неправильном формате');
+            }
+
+            const loading = document.getElementById('loading');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // Скрываем лоадер и header
+            loading.style.display = 'none';
+            document.querySelector('.results-header').style.display = 'none';
+            
+            // Разблокируем кнопку
+            generateBtn.disabled = false;
+            generateBtn.textContent = '✨ Создать волшебную сказку! ✨';
+
+            // Отображаем заголовок и очищаем части
+            storyTitle.textContent = data.title;
+            storyParts.innerHTML = '';
+
+            // Показываем текст сказки с изображениями сразу
+            data.parts.forEach((part, index) => {
+                const partElement = document.createElement('div');
+                partElement.className = 'story-part';
+                partElement.innerHTML = `
+                    <img src="${part.image}" 
+                         alt="Иллюстрация ${index + 1}" 
+                         loading="eager" 
+                         style="opacity: 0; transition: opacity 0.5s ease;" 
+                         onload="this.style.opacity='1'"
+                         onclick="openModal(this.src)">
+                    <div class="story-text">${part.text}</div>
+                `;
+                storyParts.appendChild(partElement);
+            });
+
+            // Показываем результат
+            storyResult.style.display = 'block';
+            storyResult.style.visibility = 'visible';
+            storyResult.style.opacity = '1';
+
+            // Прокручиваем к результату
+            setTimeout(() => {
+                storyResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Функции для модального окна
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+            document.body.style.overflow = 'hidden'; // Запрещаем прокрутку фона
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Возвращаем прокрутку
+        }
+
+        // Закрытие модального окна по ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const resultsHeader = document.querySelector('.results-header');
+
+            errorText.textContent = '❌ ' + message;
+            errorMessage.style.display = 'block';
+            resultsHeader.style.display = 'block';
+            errorMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetView() {
+            document.getElementById('storyResult').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+            document.querySelector('.results-header').style.display = 'block';
+            document.getElementById('generateBtn').disabled = false;
+            document.getElementById('generateBtn').textContent = '✨ Создать волшебную сказку! ✨';
+
+            // Сбрасываем превью изображения
+            document.getElementById('image').value = '';
+            document.getElementById('fileName').textContent = 'Файл не выбран';
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+
+    </script>
+</body>
+</html>
